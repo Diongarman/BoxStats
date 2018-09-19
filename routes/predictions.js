@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {Prediction} = require('./../db/models/prediction');
+const {ObjectID} = require('mongodb')
+
 
 
 router.post('/', async (req, res) => {
@@ -31,6 +33,27 @@ router.get('/', async (req, res) => {
         res.status(400).send(e)
     }
     
+})
+
+router.get('/:id', async (req, res) => {
+    let id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(400).send('Invalid ID')
+    }
+
+    try {
+        const prediction = await Prediction.findById(id);
+
+        if (!prediction) {
+            return res.status(404).send('User with that ID cannot be found in database.')
+        }
+        
+        res.send({prediction});
+
+    } catch (e) {
+        res.status(400).send({})
+    }
 })
 
 module.exports = router;
