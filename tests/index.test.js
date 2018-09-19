@@ -3,11 +3,16 @@ const expect = require('expect')
 const {app} = require('./../index')
 const {Prediction} = require('./../db/models/prediction')
 
+const dummyPredictions = [{winner: "Floyd Mayweather", outcome: "DECISION"},{winner: "Manny Pacquiao", outcome: "KO/TKO", round: 7}]
+
 beforeEach((done) => {
     Prediction.deleteMany({}).then(() => {
-        done();
-    })
-})
+        return Prediction.insertMany(dummyPredictions)
+        
+    }).then(() => done())
+    
+});
+
 
 describe('POST /api/predictions', () => {
     it('should create new prediction', (done) => {
@@ -28,8 +33,7 @@ describe('POST /api/predictions', () => {
             if (err) {
                 return done(err)
             }
-            let predictions = await Prediction.find();
-
+            let predictions = await Prediction.find({winner, outcome, round});
             try {
                 expect(predictions.length).toBe(1);
                 expect(predictions[0].winner).toBe(winner);
@@ -42,8 +46,6 @@ describe('POST /api/predictions', () => {
             }
         });
     })
-
-
 
 
     it('should not create a prediction with invalid body data', (done) => {
@@ -61,7 +63,7 @@ describe('POST /api/predictions', () => {
                 let predictions = await Prediction.find();
     
                 try {
-                    expect(predictions.length).toBe(0);
+                    expect(predictions.length).toBe(2);
                     done();
     
                 } catch (e) {
@@ -70,3 +72,13 @@ describe('POST /api/predictions', () => {
             });
         })
 })
+
+describe('GET /api/predictions', () => {
+    it('should get all predictions', (done) => {
+        request(app)
+        .get('/api/predictions')
+        .expect(200).expect((res) => {
+            expect(res.body.predictions.length).toBe(2)
+        }).end(done)
+    });
+});
