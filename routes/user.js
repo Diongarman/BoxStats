@@ -7,15 +7,15 @@ module.exports = router;
 
 router.post('/', async (req, res) => {
     const newUser = new User({
-        username: 'GenrlW234',
-        email: 'mj@gmail.com'
+        username: req.body.username,
+        email: req.body.email
     });
 
     try {
         const result = await newUser.save();
-        console.log(result);
+        res.send(result)
     } catch (e) {
-        console.log(`Unable to save user: ${e.message}`)
+        res.status(400).send(e)
     }
 })
 

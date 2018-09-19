@@ -15,7 +15,7 @@ const user = require('./routes/user');
 
 app.use(express.json());
 app.use('/api/predictions', predictions);
-app.use('/api/user', user)
+app.use('/api/users', user)
 
 
 const PORT = process.env.PORT || 3000;
@@ -23,6 +23,8 @@ app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 })
 
+
+module.exports = {app};
 
 
 
