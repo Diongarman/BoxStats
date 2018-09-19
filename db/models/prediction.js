@@ -22,12 +22,14 @@ const PredictionSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['pending', 'resolved', 'postponed'],
-        default: 'pending'
+        default: 'pending',
+        required: true
     },
     pointsWon: {
         type: Number,
         default: 0
     }
+
 
 });
 

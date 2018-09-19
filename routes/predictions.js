@@ -8,7 +8,8 @@ router.post('/', async (req, res) => {
         winner: req.body.winner,
         outcome: req.body.outcome,
         round: req.body.round,
-        pointsWon: req.body.pointsWon
+        pointsWon: req.body.pointsWon,
+        status: req.body.status
     });
 
     try {
@@ -18,6 +19,18 @@ router.post('/', async (req, res) => {
         res.status(400).send(e)
     }
     //res.send()
+})
+
+
+router.get('/', async (req, res) => {
+
+    try {
+        const predictions = await Prediction.find({});
+        res.send({predictions})
+    } catch (e) {
+        res.status(400).send(e)
+    }
+    
 })
 
 module.exports = router;
